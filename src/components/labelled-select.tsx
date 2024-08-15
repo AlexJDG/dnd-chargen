@@ -8,11 +8,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { FC } from "react";
 
-type TOption = string | { label: string; value: string };
+type TOption<T extends string> = T | { label: string; value: T };
 
-const renderOptions = (options: TOption[]) =>
+const renderOptions = <T extends string>(options: TOption<T>[]) =>
     options.map((option) => (
         <SelectItem
             key={typeof option === "string" ? option : option.value}
@@ -22,17 +21,27 @@ const renderOptions = (options: TOption[]) =>
         </SelectItem>
     ));
 
-export const LabelledSelect: FC<{
-    value: string | undefined;
-    onValueChange: (value: string) => void;
+export const LabelledSelect = <T extends string>({
+    value,
+    onValueChange,
+    label,
+    options,
+    id,
+    placeholder,
+}: {
+    value: T | undefined;
+    onValueChange: (value: T) => void;
     label: string;
     placeholder: string;
     id: string;
-    options: readonly TOption[] | Record<string, readonly TOption[]>;
-}> = ({ value, onValueChange, label, options, id, placeholder }) => (
+    options: readonly TOption<T>[] | Record<string, readonly TOption<T>[]>;
+}) => (
     <div className="flex flex-col min-w-80 gap-2">
         <Label htmlFor={id}>{label}</Label>
-        <Select value={value} onValueChange={(newVal) => onValueChange(newVal)}>
+        <Select
+            value={value}
+            onValueChange={(newVal) => onValueChange(newVal as T)}
+        >
             <SelectTrigger id={id}>
                 <SelectValue placeholder={placeholder} />
             </SelectTrigger>

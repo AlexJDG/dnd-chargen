@@ -1,9 +1,10 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import {
+    generateAttributes,
     generateBackstory,
     generateImage,
-    TCharacterInfo,
-    TGeneratedCharacterInfo,
+    TCharacterAttributes,
+    TCharacterBackstory,
 } from "@/helpers/openai";
 import { useState } from "react";
 import { BasicParameterPicker } from "@/components/basic-parameter-picker";
@@ -11,26 +12,29 @@ import { AlignmentPicker } from "@/components/alignment-picker";
 import { Backstory } from "@/components/backstory";
 import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/ui/button";
-import { LoaderCircle, LoaderCircleIcon } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
-function App() {
-    const [characterParameters, setCharacterParameters] =
-        useState<TCharacterInfo>();
+export const App = () => {
+    const [characterParameters, setCharacterParameters] = useState<
+        Partial<TCharacterAttributes>
+    >({});
 
     const [loading, setLoading] = useState(false);
-    const [generatedInfo, setGeneratedInfo] =
-        useState<TGeneratedCharacterInfo>();
+    const [backstoryInfo, setBackstoryInfo] = useState<TCharacterBackstory>();
     const [imageURL, setImageURL] = useState<string>();
 
     const generateCharacter = async () => {
-        if (!characterParameters) return;
         setLoading(true);
-        const generatedInfo = await generateBackstory(characterParameters);
-        setGeneratedInfo(generatedInfo);
+
+        const attributes = await generateAttributes(characterParameters);
+        setCharacterParameters(attributes);
+
+        const generatedInfo = await generateBackstory(attributes);
+        setBackstoryInfo(generatedInfo);
 
         if (generatedInfo) {
             const imageURL = await generateImage({
-                ...characterParameters,
+                ...attributes,
                 ...generatedInfo,
             });
             setImageURL(imageURL);
@@ -64,8 +68,9 @@ function App() {
                     }
                 />
                 <Backstory
-                    className="min-w-80 max-w-full lg:flex-1"
-                    backstory={generatedInfo}
+                    className="min-w-80 max-w-full lg:min-w-[600px] lg:flex-1"
+                    backstory={backstoryInfo}
+                    characterAttributes={characterParameters}
                 />
                 <Avatar
                     className="self-start max-w-[420px]"
@@ -82,6 +87,6 @@ function App() {
             </Button>
         </main>
     );
-}
+};
 
 export default App;

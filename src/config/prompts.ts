@@ -1,3 +1,7 @@
+export const ATTRIBUTES =
+    "Generate a list of attributes for a 5th edition 'Dungeons and Dragons'" +
+    " character that compliment the provided parameters if present.";
+
 export const BACKSTORY =
     "Generate a backstory for a 5th edition 'Dungeons and Dragons' character based on the provided parameters. " +
     "The backstory should be a few paragraphs long and include details about the character's history and personality traits." +
@@ -5,4 +9,4 @@ export const BACKSTORY =
 
 export const AVATAR =
     "Generate an portrait avatar for a 5th edition 'Dungeons and Dragons' character based on the provided parameters. The image " +
-    "should not contain any text or graphics that are not part of the character's appearance. ";
+    "MUST NOT contain any text or graphics that are not part of the character's appearance.";

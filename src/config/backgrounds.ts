@@ -87,4 +87,4 @@ export const BACKGROUNDS = [
     "Wildspacer",
     "Witchlight Hand",
     "Witherbloom Student",
-];
+] as const;

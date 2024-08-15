@@ -1,15 +1,16 @@
-import { TCharacterInfo } from "@/helpers/openai";
+import { TCharacterAttributes } from "@/helpers/openai";
 import { Dispatch, FC, SetStateAction } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LabelledSelect } from "@/components/labelled-select";
 import { RACES } from "@/config/races";
 import { CLASSES } from "@/config/classes";
 import { BACKGROUNDS } from "@/config/backgrounds";
+import { GENDERS } from "@/config/genders";
 
 export const BasicParameterPicker: FC<{
-    characterParameters: TCharacterInfo | undefined;
+    characterParameters: Partial<TCharacterAttributes>;
     setCharacterParameters: Dispatch<
-        SetStateAction<TCharacterInfo | undefined>
+        SetStateAction<Partial<TCharacterAttributes>>
     >;
     className?: string;
 }> = ({ characterParameters, setCharacterParameters, className }) => (
@@ -54,6 +55,19 @@ export const BasicParameterPicker: FC<{
                     placeholder="Select a Background"
                     id="select-background"
                     options={BACKGROUNDS}
+                />
+                <LabelledSelect
+                    value={characterParameters?.gender}
+                    onValueChange={(gender) =>
+                        setCharacterParameters((curr) => ({
+                            ...curr,
+                            gender,
+                        }))
+                    }
+                    label="Gender"
+                    placeholder="Select a Gender"
+                    id="select-gender"
+                    options={GENDERS}
                 />
             </section>
         </CardContent>

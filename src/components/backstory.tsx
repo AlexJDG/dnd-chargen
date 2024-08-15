@@ -6,18 +6,21 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { TGeneratedCharacterInfo } from "@/helpers/openai";
+import { TCharacterAttributes, TCharacterBackstory } from "@/helpers/openai";
 
 export const Backstory: FC<{
-    backstory?: TGeneratedCharacterInfo;
+    backstory?: TCharacterBackstory;
+    characterAttributes: Partial<TCharacterAttributes>;
     className?: string;
-}> = ({ backstory, className }) => {
+}> = ({ backstory, characterAttributes, className }) => {
     return (
         backstory && (
             <Card className={className}>
                 <CardHeader>
-                    <CardTitle>{backstory.name}</CardTitle>
-                    <CardDescription>Age: {backstory.age}, </CardDescription>
+                    <CardTitle>{characterAttributes.name}</CardTitle>
+                    <CardDescription>
+                        Age: {characterAttributes?.age},{" "}
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                     <p>{backstory.physicalAppearance}</p>

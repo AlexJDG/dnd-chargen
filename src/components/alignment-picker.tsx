@@ -1,20 +1,9 @@
 import { FC } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ALIGNMENTS } from "@/config/alignments";
 
-const ALIGNMENTS = [
-    "Lawful Good",
-    "Neutral Good",
-    "Chaotic Good",
-    "Lawful Neutral",
-    "True Neutral",
-    "Chaotic Neutral",
-    "Lawful Evil",
-    "Neutral Evil",
-    "Chaotic Evil",
-] as const;
-
-export type TAlignment = (typeof ALIGNMENTS)[number];
+type TAlignment = (typeof ALIGNMENTS)[number];
 
 export const AlignmentPicker: FC<{
     value: TAlignment | undefined;
