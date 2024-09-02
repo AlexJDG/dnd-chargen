@@ -84,7 +84,7 @@ export const App = () => {
                     <ModeToggle />
                 </div>
                 <LabelledInput
-                    className="flex flex-row items-center gap-5 w-[200px]"
+                    className="flex flex-row items-center gap-5 w-[300px]"
                     value={apiKey}
                     onValueChange={setApiKey}
                     label={"OpenAI API key"}
