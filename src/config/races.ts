@@ -5,6 +5,7 @@ export const RACES = [
     "Centaur",
     "Changeling",
     "Deep Gnome",
+    "Dragonborn",
     "Dragonlance",
     "Duergar",
     "Dwarf",
@@ -51,5 +52,4 @@ export const RACES = [
     "Triton",
     "Verdan",
     "Yuan-Ti",
-    "Dragonborn",
 ] as const;
