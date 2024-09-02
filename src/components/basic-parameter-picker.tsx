@@ -6,6 +6,7 @@ import { RACES } from "@/config/races";
 import { CLASSES } from "@/config/classes";
 import { BACKGROUNDS } from "@/config/backgrounds";
 import { GENDERS } from "@/config/genders";
+import { LabelledInput } from "@/components/labelled-input";
 
 export const BasicParameterPicker: FC<{
     characterParameters: Partial<TCharacterAttributes>;
@@ -68,6 +69,19 @@ export const BasicParameterPicker: FC<{
                     placeholder="Select a Gender"
                     id="select-gender"
                     options={GENDERS}
+                />
+                <LabelledInput
+                    className="flex flex-col min-w-80 gap-2"
+                    value={characterParameters?.name}
+                    onValueChange={(name) =>
+                        setCharacterParameters((curr) => ({
+                            ...curr,
+                            name,
+                        }))
+                    }
+                    label="Name"
+                    id="name-input"
+                    placeholder="Enter a Name"
                 />
             </section>
         </CardContent>
