@@ -6,13 +6,16 @@ import {
     TCharacterAttributes,
     TCharacterBackstory,
 } from "@/helpers/openai";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BasicParameterPicker } from "@/components/basic-parameter-picker";
 import { AlignmentPicker } from "@/components/alignment-picker";
 import { Backstory } from "@/components/backstory";
 import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/ui/button";
 import { LoaderCircle } from "lucide-react";
+import { LabelledInput } from "@/components/labelled-input";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import OpenAI from "openai";
 
 export const App = () => {
     const [characterParameters, setCharacterParameters] = useState<
@@ -22,21 +25,49 @@ export const App = () => {
     const [loading, setLoading] = useState(false);
     const [backstoryInfo, setBackstoryInfo] = useState<TCharacterBackstory>();
     const [imageURL, setImageURL] = useState<string>();
+    const [apiKey, setApiKey] = useLocalStorage<string>("openai-api-key");
+    const openAiAPI = useRef<OpenAI>();
+    const apiKeyInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (apiKey) {
+            openAiAPI.current = new OpenAI({
+                dangerouslyAllowBrowser: true,
+                apiKey,
+            });
+        }
+    }, [apiKey]);
 
     const generateCharacter = async () => {
+        if (!openAiAPI.current) {
+            apiKeyInputRef.current?.focus();
+            console.log(apiKeyInputRef.current);
+            alert("OpenAI API key not set");
+            return;
+        }
+
         setLoading(true);
 
-        const attributes = await generateAttributes(characterParameters);
+        const attributes = await generateAttributes(
+            characterParameters,
+            openAiAPI.current,
+        );
         setCharacterParameters(attributes);
 
-        const generatedInfo = await generateBackstory(attributes);
+        const generatedInfo = await generateBackstory(
+            attributes,
+            openAiAPI.current,
+        );
         setBackstoryInfo(generatedInfo);
 
         if (generatedInfo) {
-            const imageURL = await generateImage({
-                ...attributes,
-                ...generatedInfo,
-            });
+            const imageURL = await generateImage(
+                {
+                    ...attributes,
+                    ...generatedInfo,
+                },
+                openAiAPI.current,
+            );
             setImageURL(imageURL);
         }
 
@@ -45,11 +76,24 @@ export const App = () => {
 
     return (
         <main className="container p-5 max-w-[1200px] flex flex-col gap-5">
-            <header className="flex gap-5">
-                <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight md:text-4xl">
-                    D&D Backstory Generator
-                </h1>
-                <ModeToggle />
+            <header className="flex gap-5 justify-between">
+                <div className="flex gap-5">
+                    <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight md:text-4xl">
+                        D&D Backstory Generator
+                    </h1>
+                    <ModeToggle />
+                </div>
+                <LabelledInput
+                    className="flex flex-row items-center gap-5 w-[200px]"
+                    value={apiKey}
+                    onValueChange={setApiKey}
+                    label={"OpenAI API key"}
+                    type="password"
+                    id={"openai-api-key-input"}
+                    placeholder={"OpenAI API key"}
+                    required
+                    ref={apiKeyInputRef}
+                />
             </header>
             <section className="flex flex-wrap gap-5">
                 <BasicParameterPicker

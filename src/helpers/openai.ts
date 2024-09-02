@@ -8,11 +8,6 @@ import { RACES } from "@/config/races";
 import { GENDERS } from "@/config/genders";
 import { ALIGNMENTS } from "@/config/alignments";
 
-const openai = new OpenAI({
-    dangerouslyAllowBrowser: true,
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-});
-
 const attributeResponseSchema = z.object({
     class: z.enum(CLASSES),
     background: z.enum(BACKGROUNDS),
@@ -33,6 +28,7 @@ export type TCharacterAttributes = z.infer<typeof attributeResponseSchema>;
 
 export const generateAttributes = async (
     characterInfo: Partial<TCharacterAttributes>,
+    openai: OpenAI,
 ): Promise<TCharacterAttributes> => {
     console.debug("Generating character attributes");
 
@@ -76,6 +72,7 @@ export const generateAttributes = async (
 
 export const generateBackstory = async (
     characterInfo: TCharacterAttributes,
+    openai: OpenAI,
 ) => {
     console.debug("Generating backstory with character info:", characterInfo);
 
@@ -106,6 +103,7 @@ export const generateBackstory = async (
 
 export const generateImage = async (
     params: TCharacterAttributes & TCharacterBackstory,
+    openai: OpenAI,
 ) => {
     console.debug("Generating image with params:", params);
     const completion = await openai.images.generate({
